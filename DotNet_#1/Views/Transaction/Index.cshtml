@@ -4,44 +4,61 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="col-md-8 offset-md-2">
+    <h1>PassBook</h1>
 
-<p>
-    <a asp-action="AddOrEdit">Create</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.transactionName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.transactionType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.bankName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.transactionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.transactionType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.bankName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.transactionID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.transactionID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.transactionID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.transactionName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.transactionType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.bankName)
+                </th>
+                <th>
+                    <a asp-action="AddOrEdit" class="btn btn-success">
+                        <i class="fa-solid fa-plus"></i>New
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.transactionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.transactionType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.bankName)
+                    </td>
+                    <td>
+                        <form asp-action="Delete" asp-route-id="@item.transactionID">
+                            <div class="btn-group btn btn-group-sm">
+                                <button asp-action="AddOrEdit" asp-route-id="@item.transactionID" class="btn btn-warning">
+                                    <i class="fa-solid fa-user-pen"></i>
+                                </button>
+
+
+                                <button class="btn btn-danger" onclick="return confirm('Are you sure to delete this record ?')">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+
+                            </div>
+
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+

@@ -24,114 +24,38 @@ namespace DotNet__1.Controllers
             return View(await _context.Transactions.ToListAsync());
         }
 
-        // GET: Transaction/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var transaction = await _context.Transactions
-                .FirstOrDefaultAsync(m => m.transactionID == id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            return View(transaction);
-        }
 
         // GET: Transaction/Create
-        public IActionResult AddOrEdit()
+        public IActionResult AddOrEdit(int id=0)
         {
-            return View(new Transaction());
+            if (id == 0)
+                return View(new Transaction());
+            else
+                return View(_context.Transactions.Find(id));
         }
 
-        // POST: Transaction/Create
+        // POST: Transaction/AddOrEdit
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("transactionID,transactionName,transactionType,bankName")] Transaction transaction)
+        public async Task<IActionResult> AddOrEdit([Bind("transactionID,transactionName,transactionType,bankName")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
+                if (transaction.transactionID == 0) { 
                 _context.Add(transaction);
+
+                }
+                else {
+                    _context.Update(transaction);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(transaction);
         }
 
-        // GET: Transaction/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var transaction = await _context.Transactions.FindAsync(id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-            return View(transaction);
-        }
-
-        // POST: Transaction/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("transactionID,transactionName,transactionType,bankName")] Transaction transaction)
-        {
-            if (id != transaction.transactionID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(transaction);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TransactionExists(transaction.transactionID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(transaction);
-        }
-
-        // GET: Transaction/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var transaction = await _context.Transactions
-                .FirstOrDefaultAsync(m => m.transactionID == id);
-            if (transaction == null)
-            {
-                return NotFound();
-            }
-
-            return View(transaction);
-        }
 
         // POST: Transaction/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -148,9 +72,5 @@ namespace DotNet__1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TransactionExists(int id)
-        {
-            return _context.Transactions.Any(e => e.transactionID == id);
-        }
     }
 }
